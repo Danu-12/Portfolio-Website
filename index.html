@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harender Singh | Business Analyst Portfolio</title>
+    
+    <!-- Performance Optimization: Resource Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Optimized Font Loading */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap&font-display=swap');
+        
+        :root {
+            --bg-black: #000000;
+            --accent-blue: #3b82f6;
+            --card-gray: #0a0a0a;
+            --border-white: rgba(255, 255, 255, 0.08);
+            /* Responsive Orbit Radius */
+            --orbit-radius: 400px;
+        }
+
+        @media (max-width: 768px) {
+            :root { --orbit-radius: 160px; }
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-black);
+            color: #ffffff;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Entrance Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), 
+                        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bento-item {
+            background: var(--card-gray);
+            border: 1px solid var(--border-white);
+            border-radius: 24px;
+            transition: border-color 0.3s ease, transform 0.3s ease, background 0.3s ease;
+        }
+
+        .bento-item:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+            background: #0f0f0f;
+        }
+
+        .gradient-heading {
+            background: linear-gradient(to right, #ffffff, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border-white);
+        }
+
+        .chapter-tag {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            font-weight: 800;
+            color: var(--accent-blue);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .bg-grid {
+            background-image: linear-gradient(to right, #111 1px, transparent 1px),
+                              linear-gradient(to bottom, #111 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* --- 3D REVOLVING TOOL ICONS --- */
+        .tool-orbit-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            perspective: 1200px;
+            will-change: transform;
+            transform-style: preserve-3d;
+        }
+
+        .tool-icon-3d {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            pointer-events: auto;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+            will-change: transform;
+        }
+
+        @media (min-width: 768px) {
+            .tool-icon-3d { width: 60px; height: 60px; border-radius: 16px; }
+        }
+
+        .tool-icon-3d i { font-size: 20px; }
+        @media (min-width: 768px) { .tool-icon-3d i { font-size: 24px; } }
+
+        .tool-label {
+            position: absolute;
+            bottom: -25px;
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+            color: #000;
+        }
+
+        .tool-icon-3d:hover {
+            transform: scale(1.3) !important;
+            z-index: 100 !important;
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .tool-icon-3d:hover .tool-label { opacity: 1; }
+
+        @keyframes orbit {
+            from { transform: rotateY(0deg) translateX(var(--orbit-radius)) rotateY(0deg); }
+            to { transform: rotateY(360deg) translateX(var(--orbit-radius)) rotateY(-360deg); }
+        }
+
+        @keyframes float-bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .orbiting {
+            animation: orbit var(--duration) infinite linear;
+            will-change: transform;
+        }
+
+        /* Color Themes for Icons */
+        .icon-excel { color: #1D6F42; border-bottom: 2px solid #1D6F42; }
+        .icon-powerbi { color: #F2C811; border-bottom: 2px solid #F2C811; }
+        .icon-mysql { color: #00758F; border-bottom: 2px solid #F29111; }
+        .icon-python { color: #3776AB; border-bottom: 2px solid #FFD43B; }
+        .icon-tableau { color: #E97627; border-bottom: 2px solid #1F5F8B; }
+        .icon-r { color: #276DC1; border-bottom: 2px solid #BABABA; }
+        .icon-gemini { color: #4285F4; border-bottom: 2px solid #9B51E0; }
+        .icon-chatgpt { color: #10A37F; border-bottom: 2px solid #000000; }
+        .icon-notebook { color: #4B0082; border-bottom: 2px solid #8A2BE2; }
+        .icon-claude { color: #D97757; border-bottom: 2px solid #F0EEE9; }
+        .icon-perplexity { color: #20C4C4; border-bottom: 2px solid #000000; }
+    </style>
+</head>
+<body class="antialiased bg-grid">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-6 px-4">
+        <div class="max-w-5xl mx-auto glass-nav rounded-full px-6 md:px-8 py-4 flex justify-between items-center">
+            <div class="text-xl font-black tracking-tighter">HS<span class="text-blue-500">.</span></div>
+            <div class="hidden md:flex gap-10 text-[13px] font-bold uppercase tracking-[0.2em] text-gray-500">
+                <a href="#story" class="hover:text-white transition-colors">The Story</a>
+                <a href="#internship" class="hover:text-white transition-colors">Experience</a>
+                <a href="#projects" class="hover:text-white transition-colors">Impact</a>
+                <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+            </div>
+            <a href="mailto:Harendrawork8@gmail.com" class="text-[10px] font-bold bg-white text-black px-4 md:px-5 py-2 rounded-full hover:bg-blue-600 hover:text-white transition-all">LET'S TALK</a>
+        </div>
+    </nav>
+
+    <!-- Chapter I: The Identity -->
+    <section class="min-h-screen flex flex-col justify-center items-center text-center px-6 pt-20">
+        <div class="reveal">
+            <span class="chapter-tag text-sm">Chapter I: The Identity</span>
+            <h1 class="text-5xl md:text-9xl font-black tracking-tighter leading-tight mb-8">
+                Understanding <br> <span class="gradient-heading">The Why.</span>
+            </h1>
+            <p class="text-gray-400 text-base md:text-xl max-w-4xl mx-auto leading-relaxed mb-12">
+                Merging economic and statistical intuition with advanced analytics to transform complex business challenges into actionable growth strategies.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#projects" class="px-8 md:px-10 py-4 bg-blue-600 rounded-full font-bold hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all">Explore Impact</a>
+                <a href="https://github.com/Danu-12" target="_blank" rel="noopener" class="px-8 md:px-10 py-4 border border-white/10 rounded-full font-bold hover:bg-white/5 transition-all">GitHub Repo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chapter II: The Conflict -->
+    <section id="story" class="py-20 md:py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
+                <div class="reveal">
+                    <span class="chapter-tag text-sm">Chapter II: The Conflict</span>
+                    <h2 class="text-4xl md:text-5xl font-black mb-8 italic">Taming the <br>Chaos.</h2>
+                    <p class="text-gray-500 text-base md:text-lg leading-relaxed mb-12">
+                        Data without clarity is just noise. Every project starts with a hurdle—whether it's 30,000+ messy records or manual reporting slowing down the business.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="bento-item p-6 md:p-8">
+                            <div class="text-3xl md:text-4xl font-black text-blue-500 mb-2">12%</div>
+                            <div class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Manual Effort Reduction</div>
+                        </div>
+                        <div class="bento-item p-6 md:p-8">
+                            <div class="text-3xl md:text-4xl font-black text-white mb-2">30K+</div>
+                            <div class="text-[10px] uppercase font-bold text-gray-500 tracking-widest">Records Analyzed</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bento-item p-8 md:p-10 bg-gradient-to-br from-blue-900/10 to-transparent reveal">
+                    <h4 class="text-lg md:text-xl font-bold mb-6 italic text-blue-400">The Turning Point</h4>
+                    <div class="space-y-4 text-gray-400 text-sm md:text-base mb-8 leading-relaxed">
+                        <p>Transitioning from an Economics & History degree to an MBA in Business Analytics allowed me to look at data through a statistical and economics lens.</p>
+                        <p>I don't see rows; I see patterns of behavior and hidden business logic.</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center"><i class="fas fa-database text-blue-500"></i></div>
+                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center"><i class="fab fa-python text-yellow-500"></i></div>
+                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center"><i class="fas fa-chart-pie text-blue-400"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chapter III: The Journey (Internship) -->
+    <section id="internship" class="py-20 md:py-32 px-6 bg-[#050505]">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-12 md:mb-20 reveal">
+                <span class="chapter-tag text-sm">Chapter III: The Journey</span>
+                <h2 class="text-4xl md:text-5xl font-black italic">Industry Immersion.</h2>
+            </div>
+            
+            <div class="bento-item p-8 md:p-12 border-l-4 border-blue-600 reveal">
+                <div class="flex flex-col md:flex-row justify-between mb-8 md:mb-10">
+                    <div>
+                        <h3 class="text-2xl md:text-3xl font-black mb-2">Digital Marketing Intern</h3>
+                        <p class="text-blue-500 font-bold tracking-widest uppercase text-[10px] md:text-xs">Dev Bhoomi Uttarakhand University</p>
+                    </div>
+                    <p class="text-gray-500 font-bold text-xs md:text-sm mt-4 md:mt-0">2025 | DEHRADUN</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+                    <div class="space-y-4 md:space-y-6 text-gray-400 text-sm md:text-base leading-relaxed">
+                        <p>During my internship, I executed SEO strategies that propelled the university's online visibility into <strong>Google's AI Overview</strong>.</p>
+                        <p>I conducted gap analysis using SEMrush and Ahrefs, translating competitor keywords into a content strategy that drove organic growth.</p>
+                    </div>
+                    <div class="bg-black/40 p-6 md:p-8 rounded-3xl border border-white/5">
+                        <h4 class="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest mb-6">Key Focus Areas</h4>
+                        <div class="flex flex-wrap gap-2 md:gap-3">
+                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-white/5 rounded-full text-[9px] md:text-[10px] font-bold">SEO AUDITS</span>
+                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-white/5 rounded-full text-[9px] md:text-[10px] font-bold">META ADS</span>
+                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-white/5 rounded-full text-[9px] md:text-[10px] font-bold">AI OVERVIEW</span>
+                            <span class="px-3 py-1.5 md:px-4 md:py-2 bg-white/5 rounded-full text-[9px] md:text-[10px] font-bold">COMPETITOR ANALYSIS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chapter IV: The Resolution (Projects) -->
+    <section id="projects" class="py-20 md:py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 md:mb-24 reveal">
+                <span class="chapter-tag text-sm">Chapter IV: The Resolution</span>
+                <h2 class="text-5xl md:text-8xl font-black tracking-tighter italic">Proof of <br>Work.</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                <!-- Project 1 -->
+                <a href="https://github.com/Danu-12/Meta-AD-Performance-Dashboard" target="_blank" rel="noopener" class="bento-item p-8 md:p-10 reveal group cursor-pointer border-blue-600/20 block">
+                    <div class="flex justify-between mb-8">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center text-blue-600"><i class="fas fa-chart-line text-xl md:text-2xl"></i></div>
+                        <i class="fas fa-arrow-right text-gray-700 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-4">Meta Ad Performance Dashboard</h3>
+                    <p class="text-gray-500 text-sm md:text-base leading-relaxed mb-8">Analyzed 26K records to track CTR & ROI, helping prioritize high-performing segments and budget re-allocation.</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="text-[10px] font-bold border border-white/10 px-3 py-1 rounded-full text-gray-400 uppercase">POWER BI</span>
+                        <span class="text-[10px] font-bold border border-white/10 px-3 py-1 rounded-full text-gray-400 uppercase">EXCEL</span>
+                        <span class="text-[10px] font-bold border border-white/10 px-3 py-1 rounded-full text-gray-400 uppercase">DAX</span>
+                    </div>
+                </a>
+
+                <!-- Project 2 -->
+                <a href="https://github.com/Danu-12/Diwali-Sales-Analysis" target="_blank" rel="noopener" class="bento-item p-8 md:p-10 reveal group cursor-pointer border-green-600/20 block">
+                    <div class="flex justify-between mb-8">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-green-600/10 rounded-2xl flex items-center justify-center text-green-600"><i class="fas fa-shopping-cart text-xl md:text-2xl"></i></div>
+                        <i class="fas fa-arrow-right text-gray-700 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-4">Diwali Sales Analysis</h3>
+                    <p class="text-gray-500 text-sm md:text-base leading-relaxed mb-8">Identified revenue drivers in 10K+ B2C records to optimize inventory planning and demand forecasting.</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="text-[10px] font-bold border border-white/10 px-3 py-1 rounded-full text-gray-400 uppercase">PYTHON</span>
+                        <span class="text-[10px] font-bold border border-white/10 px-3 py-1 rounded-full text-gray-400 uppercase">PANDAS</span>
+                    </div>
+                </a>
+
+                <!-- Project 3 -->
+                <a href="https://github.com/Danu-12/Coffee-Sales-Dashboard" target="_blank" rel="noopener" class="bento-item p-8 md:p-10 reveal group cursor-pointer border-amber-600/20 block">
+                    <div class="flex justify-between mb-8">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-amber-600/10 rounded-2xl flex items-center justify-center text-amber-600"><i class="fas fa-coffee text-xl md:text-2xl"></i></div>
+                        <i class="fas fa-arrow-right text-gray-700 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-4">Coffee Sales Dashboard</h3>
+                    <p class="text-gray-500 text-sm md:text-base leading-relaxed mb-8">Evaluated sales drivers to prioritize high-margin products using Advanced Excel with Pivot Tables and automated formulas.</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="text-[10px] font-bold border border-white/10 px-3 py-1 rounded-full text-gray-400 uppercase">ADV. EXCEL</span>
+                        <span class="text-[10px] font-bold border border-white/10 px-3 py-1 rounded-full text-gray-400 uppercase">AUTOMATION</span>
+                    </div>
+                </a>
+
+                <!-- Project 4 -->
+                <a href="https://github.com/Danu-12/YouTube-sentimental-Analysis" target="_blank" rel="noopener" class="bento-item p-8 md:p-10 reveal group cursor-pointer border-red-600/20 block">
+                    <div class="flex justify-between mb-8">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-red-600/10 rounded-2xl flex items-center justify-center text-red-600"><i class="fab fa-youtube text-xl md:text-2xl"></i></div>
+                        <i class="fas fa-arrow-right text-gray-700 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-4">YouTube Sentiment Analysis</h3>
+                    <p class="text-gray-500 text-sm md:text-base leading-relaxed mb-8">Decoded audience emotions using Python & NLP to translate 1,000+ comments into content driving themes.</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="text-[10px] font-bold border border-white/10 px-3 py-1 rounded-full text-gray-400 uppercase">PYTHON</span>
+                        <span class="text-[10px] font-bold border border-white/10 px-3 py-1 rounded-full text-gray-400 uppercase">NLP</span>
+                        <span class="text-[10px] font-bold border border-white/10 px-3 py-1 rounded-full text-gray-400 uppercase">PANDAS</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Evertea Highlight -->
+    <section class="py-20 md:py-32 px-6 bg-blue-600 text-white rounded-[2rem] md:rounded-[4rem] mx-4 mb-20 overflow-hidden relative reveal">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl md:text-8xl font-black italic tracking-tighter mb-8 leading-none">"Chai Jo Chalti Jaye"</h2>
+            <p class="text-lg md:text-2xl font-medium opacity-90 max-w-2xl mx-auto mb-10">
+                Co-founded Evertea during my MBA. I applied demand planning and data monitoring to achieve <strong>100% sell-out</strong> of all product batches.
+            </p>
+            <div class="px-6 py-2 bg-black text-white inline-block rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest">Co-Founder Experience</div>
+        </div>
+    </section>
+
+    <!-- Footer / Final Reveal Section -->
+    <footer id="contact" class="py-20 md:py-32 px-6 bg-white text-black rounded-t-[2rem] md:rounded-t-[4rem] reveal relative overflow-hidden min-h-[80vh] flex flex-col justify-center">
+        
+        <!-- 3D TOOL ORBIT ARENA -->
+        <div class="tool-orbit-container opacity-30 md:opacity-100">
+            <div class="tool-icon-3d icon-excel orbiting" style="--duration: 20s; top: 20%; left: 45%;">
+                <i class="fas fa-file-excel"></i>
+                <span class="tool-label">Excel</span>
+            </div>
+            <div class="tool-icon-3d icon-powerbi orbiting" style="--duration: 25s; top: 60%; left: 15%;">
+                <i class="fas fa-chart-bar"></i>
+                <span class="tool-label">Power BI</span>
+            </div>
+            <div class="tool-icon-3d icon-mysql orbiting" style="--duration: 18s; top: 40%; left: 75%;">
+                <i class="fas fa-database"></i>
+                <span class="tool-label">MySQL</span>
+            </div>
+            <div class="tool-icon-3d icon-python orbiting" style="--duration: 30s; top: 10%; left: 20%;">
+                <i class="fab fa-python"></i>
+                <span class="tool-label">Python</span>
+            </div>
+            <div class="tool-icon-3d icon-tableau orbiting" style="--duration: 22s; top: 80%; left: 50%;">
+                <i class="fas fa-th-large"></i>
+                <span class="tool-label">Tableau</span>
+            </div>
+            <div class="tool-icon-3d icon-r orbiting" style="--duration: 28s; top: 30%; left: 10%;">
+                <i class="fas fa-registered"></i>
+                <span class="tool-label">R Stats</span>
+            </div>
+            <div class="tool-icon-3d icon-gemini orbiting" style="--duration: 15s; top: 70%; left: 80%;">
+                <i class="fas fa-sparkles"></i>
+                <span class="tool-label">Gemini</span>
+            </div>
+            <div class="tool-icon-3d icon-chatgpt orbiting" style="--duration: 26s; top: 50%; left: 90%;">
+                <i class="fas fa-robot"></i>
+                <span class="tool-label">ChatGPT</span>
+            </div>
+            <div class="tool-icon-3d icon-notebook orbiting" style="--duration: 24s; top: 15%; left: 85%;">
+                <i class="fas fa-book-open"></i>
+                <span class="tool-label">NotebookLM</span>
+            </div>
+            <div class="tool-icon-3d icon-claude orbiting" style="--duration: 21s; top: 85%; left: 25%;">
+                <i class="fas fa-brain"></i>
+                <span class="tool-label">Claude</span>
+            </div>
+            <div class="tool-icon-3d icon-perplexity orbiting" style="--duration: 27s; top: 5%; left: 60%;">
+                <i class="fas fa-search"></i>
+                <span class="tool-label">Perplexity</span>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto z-10 relative">
+            <div class="grid lg:grid-cols-2 gap-12 md:gap-20 items-end">
+                <div>
+                   <h2 class="text-5xl md:text-9xl font-black tracking-tighter leading-none mb-10 uppercase">THE <br> NEXT <br> CHAPTER...</h2>
+                    <div class="flex flex-col sm:flex-row flex-wrap gap-6 md:gap-8">
+                        <a href="mailto:Harendrawork8@gmail.com" class="text-xl md:text-2xl font-bold border-b-2 md:border-b-4 border-black pb-1 hover:text-blue-600 hover:border-blue-600 transition-all w-fit">Email</a>
+                        <a href="https://www.linkedin.com/in/harender-singh-analyst" target="_blank" rel="noopener" class="text-xl md:text-2xl font-bold border-b-2 md:border-b-4 border-black pb-1 hover:text-blue-600 hover:border-blue-600 transition-all w-fit">LinkedIn</a>
+                        <a href="https://github.com/Danu-12" target="_blank" rel="noopener" class="text-xl md:text-2xl font-bold border-b-2 md:border-b-4 border-black pb-1 hover:text-blue-600 hover:border-blue-600 transition-all w-fit">GitHub</a>
+                    </div>
+                </div>
+                <div class="lg:text-right mt-12 md:mt-0">
+                    <p class="text-[10px] font-black uppercase tracking-[0.4em] mb-4 text-gray-400">Based in Uttarakhand, India</p>
+                    <p class="text-gray-400 text-xs italic">Harender Singh Portfolio &copy; 2026</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Efficient Intersection Observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll handling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if(target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
